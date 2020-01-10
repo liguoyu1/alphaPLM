@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
     try
     {
         opt.parse_option(argv_to_args(argc, argv));
+        opt.print_option();
     }
     catch(const invalid_argument& e)
     {
@@ -73,12 +74,14 @@ int main(int argc, char* argv[])
         f_temp.close();
     }
 
+    trainer.debugModel();
     pc_frame frame;
     frame.init(trainer, opt.threads_num);
     frame.run();
 
     ofstream f_model(opt.model_path.c_str(), ofstream::out);
     trainer.outputModel(f_model);
+    trainer.debugModel();
     f_model.close();
 
     return 0;

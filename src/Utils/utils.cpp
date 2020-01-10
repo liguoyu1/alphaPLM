@@ -39,11 +39,9 @@ double utils::gaussian()
     double u,v, x, y, Q;
     do
     {
-        do 
-        {
+        do {
             u = uniform();
-        } while (u == 0.0); 
-
+        }while(0.0==u);
         v = 1.7156 * (uniform() - 0.5);
         x = u - 0.449871;
         y = fabs(v) + 0.386595;

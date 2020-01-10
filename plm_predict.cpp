@@ -8,9 +8,11 @@ using namespace std;
 
 struct Option 
 {
-    Option() : piece_num(4), threads_num(1) {}
+    Option() : piece_num(4), threads_num(1), is_debug(false) {}
     string model_path, predict_path;
     int threads_num, piece_num;
+    bool is_debug;
+    bool have_news;
 };
 
 string predict_help() 
@@ -70,6 +72,16 @@ Option parse_option(const vector<string>& args)
                 throw invalid_argument("invalid command\n");
             opt.predict_path = args[++i];
         }
+        else if(args[i].compare("-debug") == 0){
+            if(i == argc - 1)
+                throw invalid_argument("invalid command\n");
+            opt.is_debug = (0 == stoi(args[++i])) ? false : true;
+        }
+        else if(args[i].compare("-have_news")==0){
+            if(i == argc - 1)
+                throw  invalid_argument("invalid_argument\n");
+            opt.have_news = (0 == stoi(args[++i])) ? false : true;
+        }
         else
         {
             break;
@@ -99,7 +111,7 @@ int main(int argc, char* argv[])
     ifstream f_model(opt.model_path.c_str());
     ofstream f_predict(opt.predict_path.c_str(), ofstream::out);
 
-    ftrl_predictor predictor(opt.piece_num, f_model, f_predict);
+    ftrl_predictor predictor(opt.have_news, opt.piece_num, f_model, f_predict);
 
     pc_frame frame;
     frame.init(predictor, opt.threads_num);

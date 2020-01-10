@@ -212,6 +212,7 @@ double ftrl_model::get_uTx(const vector<pair<string, double> >& x, ftrl_model_un
     for(int i = 0; i < x.size(); ++i)
     {
         result += theta[i]->u[f] * x[i].second;
+//        cout<< "uif:"<< theta[i]->u[f] * x[i].second<<" ,feature:"<<x[i].first << " ,value:"<<x[i].second<<endl;
     }
     return result;
 }
@@ -224,6 +225,7 @@ double ftrl_model::get_wTx(const vector<pair<string, double> >& x, ftrl_model_un
     for(int i = 0; i < x.size(); ++i)
     {
         result += theta[i]->w[f] * x[i].second;
+//        cout<< "wif:"<< theta[i]->w[f] * x[i].second<<" ,feature:"<<x[i].first << " ,value:"<<x[i].second<<endl;
     }
     return result;
 }
@@ -236,6 +238,7 @@ double ftrl_model::get_uTx(const vector<pair<string, double> >& x, ftrl_model_un
     for(int i = 0; i < x.size(); ++i)
     {
         result += get_uif(theta, x[i].first, f) * x[i].second;
+//        cout<< "uif:"<< get_uif(theta, x[i].first, f) * x[i].second<<" ,feature:"<<x[i].first << " ,value:"<<x[i].second<<endl;
     }
     return result;
 }
@@ -248,6 +251,7 @@ double ftrl_model::get_wTx(const vector<pair<string, double> >& x, ftrl_model_un
     for(int i = 0; i < x.size(); ++i)
     {
         result += get_wif(theta, x[i].first, f) * x[i].second;
+//        cout<< "wif:"<< get_uif(theta, x[i].first, f) * x[i].second<<" ,feature:"<<x[i].first << " ,value:"<<x[i].second<<endl;
     }
     return result;
 }
@@ -258,6 +262,7 @@ double ftrl_model::getScore(const vector<pair<string, double> >& x, ftrl_model_u
     double result = 0;
     vector<double> uTx(piece_num);
     double max_uTx = numeric_limits<double>::lowest();
+//    cout<<"feature size:"<<x.size()<<endl;
     for(int f = 0; f < piece_num; ++f)
     {
         uTx[f] = get_uTx(x, muBias, theta, f);
@@ -274,6 +279,7 @@ double ftrl_model::getScore(const vector<pair<string, double> >& x, ftrl_model_u
         numerator += uTx[f] * s_wx;
         denominator += uTx[f];
     }
+//    cout<<"numerator:"<<numerator<<" , denominator:"<<denominator<<endl;
     return numerator / denominator;
 }
 
