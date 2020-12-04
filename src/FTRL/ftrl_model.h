@@ -114,6 +114,38 @@ public:
         }
         return os;
     }
+
+    void printFtrlModelUnit(bool all_show=false) {
+        if (u.size() > 0) {
+            cout << "u:";
+            for (int f = 1; f < u.size(); ++f) {
+                cout << " " << u[f];
+            }
+            cout<<"w:";
+            for (int f = 0; f < w.size(); ++f) {
+                cout << " " << w[f];
+            }
+            if(all_show) {
+                cout<<"u_n:";
+                for (int f = 0; f < u_n.size(); ++f) {
+                    cout << " " << u_n[f];
+                }
+                cout<<"w_n:";
+                for (int f = 0; f < w_n.size(); ++f) {
+                    cout << " " << w_n[f];
+                }
+                cout<<"u_z:";
+                for (int f = 0; f < u_z.size(); ++f) {
+                    cout << " " << u_z[f];
+                }
+                cout<<"w_z:";
+                for (int f = 0; f < w_z.size(); ++f) {
+                    cout << " " << w_z[f];
+                }
+            }
+        }
+    }
+
 };
 
 
@@ -144,6 +176,8 @@ public:
     void outputModel(ofstream& out);
     bool loadModel(ifstream& in);
     void debugPrintModel();
+    void debugFeatureWeights(const vector<pair<string, double>> &x);
+
 
 private:
     double get_uif(unordered_map<string, ftrl_model_unit*>& theta, const string& index, int f);
@@ -251,7 +285,6 @@ double ftrl_model::get_wTx(const vector<pair<string, double> >& x, ftrl_model_un
     for(int i = 0; i < x.size(); ++i)
     {
         result += get_wif(theta, x[i].first, f) * x[i].second;
-//        cout<< "wif:"<< get_uif(theta, x[i].first, f) * x[i].second<<" ,feature:"<<x[i].first << " ,value:"<<x[i].second<<endl;
     }
     return result;
 }
@@ -259,6 +292,7 @@ double ftrl_model::get_wTx(const vector<pair<string, double> >& x, ftrl_model_un
 
 double ftrl_model::getScore(const vector<pair<string, double> >& x, ftrl_model_unit& muBias, unordered_map<string, ftrl_model_unit*>& theta)
 {
+    debugFeatureWeights(x);
     double result = 0;
     vector<double> uTx(piece_num);
     double max_uTx = numeric_limits<double>::lowest();
@@ -359,6 +393,20 @@ bool ftrl_model::loadModel(ifstream& in)
         muMap[index] = pMU;
     }
     return true;
+}
+
+void ftrl_model::debugFeatureWeights(const vector<pair<string, double>> &x) {
+    cout << "feature: bias:" ;
+    muBias->printFtrlModelUnit();
+    for(auto iter = x.begin();iter != x.end(); iter ++){
+        cout << "feature:" << iter->first<< " ";
+        auto re = muMap.find(iter->first);
+        if(re == muMap.end()){
+            cout << "no value" ;
+        } else
+            re->second->printFtrlModelUnit();
+        cout << endl;
+    }
 }
 
 

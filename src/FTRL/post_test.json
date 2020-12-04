@@ -1,0 +1,61 @@
+{
+    "adReqData": {
+    "chid": 2,
+    "wxversion": "1",
+    "addebug":1,
+    "adtype": 0,
+    "pf": "iphone",
+    "ext": {
+        "mob": {
+            "mobstr": "ASYKfS7aWsP0QZTpJDIe+XXIp3ovBLpUNc6qruKvh3UDmW7fgyRZuD3guuhTEd2x/fWTRkWureuy2M8abKAoGhkW8MdNXceqyEkZy0X/hgSInLp/SZmFByV5+ySN2mK3OUwapn43JqJqIduBOhWEk7nnbn4MgQOiAYB0VRyItAQ9MGEu0t6m7SBo1C11gk3ix2wptt54IgAe6fs6tBreI2sdy+GUJvDWeMDQtP2GUV59HUZylhN4IXQqgHD2xQIB+WH1EcFQWuqFw8i8skDT48wIj8RJkViDmW2FaXCTkZfLyqyL0fWu2uvINwtYwAuciYQ0zqwWWomJezT6JjiGHo146C7NChF42RKZFjLq2OxFrNTU2q8J8PAj7sYcXuEYR1FttAU8g+W+bJjeZd5nGnLJoFz8EOv1uB8+it2qAn88ht2iY7dOn/k3dDAIIiaXBFJMnHhIxdXcADMcuCMr7JgWk/A4bjueIIfkteshbk//KfyprZ71+yBzrXgOJItR55Y3I+9rGnqkQCFerTXo9Gyff0/M0v9zRCnNV1e+/av4W/L0eFXqErVr41orZ0yjPDC/KU2vt9eKsWj5Esvj1ncfpoTJIsXanYiOJqlhXS0vskGxxEAfsJDcbRmyTl7jw7wInlKU/Dj15BmB5dLWUI5i4x4sx+KBmzuv0fFQhH7bOKMPmyH9+Irfk4K0QLmAOUSTu4Nx4e/gIBfniHxvQ+5dyt49MZ05TuUo4Yy0SjoxXRSVIbGVfmjKsrQApSvXUwwUW7Bq9JZQG7J6sOTRqWT7mGvVOrxB+h/D0uFfhwcNn4G7JXGp3u0jMKCydd+VP/tuYCaKp3KegBm/rDAb7SBhU2VPyB3yKbr5vvkHZoNcJQKNy728+4gRqYMNLXTxUH26sznwxH/D+EU8kW+FWX8Zyjt/o4ez6t0RDoogWEvW9S4xuW/53MHOeL3jDDKyOh7D2mOOF3zyk0PyJVMA70VWxFlcFqKV3o7391+5GXoEmZT164nillEGxAsk7WFncDmCYI6VJrCgREKGYjAZSRiHNLeLWMx2IdV4u5hLCX2UveM4yOSlJgMbv64a5kCzVuobRmbr9iobO8ad53ZpHt2Oqpyf+ve9R9j8pFkhz9jf7Xo1Kp47Pnq45Tm3MIQC7YD5cWuMHJwx/vSb6/1zCzh/akHQ1G8uV45mrsLrkavyndus3BZMdQO6+FPLMHgObk4QXeEOUPupDFJHt6NKNGplcEC8u53O9ZJxZueVCk2prUt5g8exuod5YHk0bPBNruYo4vQu5R2MgqcNmOhLDk/nirWOlOTx3gVM68ympKr+OTFiugMDX2w2MXbz0+gOJygBNSX0joPrTxwC9NiO51r6CSt8qAEZ6j7fXoqkC8zNxUe/HzOLZBMZVd2ipGwSDg=="
+        }
+    },
+    "ver": "5.9.40",
+    "launch": "0",
+    "slot": [
+        {
+            "channel": "news_news_top",
+            "loid_watch_count": "0,0,0,0,0",
+            "recent_rot": [
+                "1",
+                "2,3,4",
+                "2,5,1"
+            ],
+            "islocal": 0,
+            "refresh_type": 1,
+            "loid": "1,13,16,23,39",
+            "orders_info": [
+                "2000010231,50,0,0,0,10,2,",
+                "732799,169312,0,1000,0,110,2,CNcD",
+                "1320870,172198,0,1000,0,110,2,CKsE",
+                "2000010225,50,0,0,0,10,2,",
+                "421289,20345,0,19,0,110,1,CKsE"
+            ]
+        }
+    ],
+    "appversion": "191204"
+},
+    "ext": {
+        "client_ip": "180.153.219.15",
+        "Host": "10.233.145.153:10080",
+        "Accept-Encoding": "gzip, deflate",
+        "User-Agent": "QQNews/5.9.40 (iPhone; iOS 12.0; Scale/3.00)",
+        "newsid": "20191125A09SNH00;20191124A06IHI00;SML2016111603351800;20191125A07HKZ00;HVD2017SPORTS000000;20191123A0LOQW00;20191118A0HZM900;20191124V0DKXD00;20191125A08RAQ00;SPO2019112500098600;20191117A05MPV00;20191125A02OX400;20191125A0305J00;20191125A095OK00;NEW2016111603351800;20191125A0094Y00;20191125A0CUPG00;20191122A0O9I700;20191125A07ADV00;SPO2019112400522100;20191124A0HR9Q00;20191122A0HSH200;20191124V0DXK800;20191122A0HLPH00;20191125A0904G00;20191125V042SI00;20191123A0CE5D00;20191122A0MXNL00;20191124V0HPER00;20191125A03X9Z00;20191125A05CCO00;20191124A03D6O00;20191125V056AT00",
+        "newsdisplay": "0;0;0;;4;;;4;;;2;;2;2;4;0;0;2;0;0;2;2;4;0;0;0;2;0;4;0;0;0;4",
+        "banner": 0,
+        "splitline": 14,
+        "eventsmodule": "",
+        "fixlist": "",
+        "cur": 0,
+        "choice_index": "0",
+        "choice_num": "",
+        "articletype": "",
+        "forwardchlid": "",
+        "hot_selection_index": 0,
+        "client_ip_v6": "180.153.219.15",
+        "vidlist": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+        "new_user_no_ad": 0,
+        "news_exp_ids": "J060P000000000",
+        "news_ads_exp_ids": ""
+    }
+}

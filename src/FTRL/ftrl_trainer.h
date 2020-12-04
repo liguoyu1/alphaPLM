@@ -141,6 +141,8 @@ public:
 private:
     void train(int y, const vector <pair<string, double>> &x);
 
+    void train(double sample_count, int y, const vector <pair<string, double>> &x);
+
 private:
     ftrl_model *pModel;
     double u_alpha, u_beta, u_l1, u_l2;
@@ -164,14 +166,20 @@ ftrl_trainer::ftrl_trainer(const trainer_option &opt) {
     w_bias = opt.w_bias;
     is_debug = opt.is_debug;
     pModel = new ftrl_model(opt.piece_num, opt.u_mean, opt.u_stdev, opt.w_mean, opt.w_stdev);
-//    pModel->debugPrintModel();
 }
 
 void ftrl_trainer::run_task(vector <string> &dataBuffer) {
     for (int i = 0; i < dataBuffer.size(); ++i) {
         plm_sample sample(dataBuffer[i], is_debug);
-        train(sample.y, sample.x);
+        train(sample.sample_count, sample.y, sample.x);
+        dataBuffer[i].clear();
     }
+
+//    while (dataBuffer.empty()) {
+//        plm_sample sample(dataBuffer.front(), is_debug);
+//        train(sample.sample_count, sample.y, sample.x);
+////        dataBuffer.pop();
+//    }
 }
 
 
@@ -191,12 +199,6 @@ void ftrl_trainer::debugModel() {
 
 //输入一个样本，更新参数
 void ftrl_trainer::train(int y, const vector <pair<string, double>> &x) {
-//    cout<<"sample_label: "<<y<<endl;
-//    cout<<"features value:"<<endl;
-//    for(auto i: x){
-//        cout<<i.first<<" : "<<i.second<<";";
-//    }
-//    cout << endl;
     ftrl_model_unit *thetaBias = pModel->getOrInitModelUnitBias();
     vector < ftrl_model_unit * > theta(x.size(), NULL);
     int xLen = x.size();
@@ -250,6 +252,119 @@ void ftrl_trainer::train(int y, const vector <pair<string, double>> &x) {
                 double &w_nif = mu.w_n[f];
                 double &w_zif = mu.w_z[f];
                 double w_gif = -y * xi * uTx[f] * wTx[f] * (1.0 - wTx[f]) / denominator2;
+                double w_sif = 1 / w_alpha * (sqrt(w_nif + w_gif * w_gif) - sqrt(w_nif));
+                w_zif += w_gif - w_sif * wif;
+                w_nif += w_gif * w_gif;
+                mu.mtx.unlock();
+            }
+        }
+    }
+    //update u via FTRL
+    for (int i = 0; i <= xLen; ++i) {
+        ftrl_model_unit &mu = i < xLen ? *(theta[i]) : *thetaBias;
+        if (i < xLen || u_bias) {
+            for (int f = 0; f < pModel->piece_num; ++f) {
+                mu.mtx.lock();
+                double &uf = mu.u[f];
+                double &u_nf = mu.u_n[f];
+                double &u_zf = mu.u_z[f];
+                if (fabs(u_zf) <= u_l1) {
+                    uf = 0.0;
+                } else {
+                    uf = (-1) *
+                         (1 / (u_l2 + (u_beta + sqrt(u_nf)) / u_alpha)) *
+                         (u_zf - utils::sgn(u_zf) * u_l1);
+                }
+                mu.mtx.unlock();
+            }
+        }
+    }
+    //update w via FTRL
+    for (int i = 0; i <= xLen; ++i) {
+        ftrl_model_unit &mu = i < xLen ? *(theta[i]) : *thetaBias;
+        if (i < xLen || w_bias) {
+            for (int f = 0; f < pModel->piece_num; ++f) {
+                mu.mtx.lock();
+                double &wf = mu.w[f];
+                double &w_nf = mu.w_n[f];
+                double &w_zf = mu.w_z[f];
+                if (fabs(w_zf) <= w_l1) {
+                    wf = 0.0;
+                } else {
+                    wf = (-1) *
+                         (1 / (w_l2 + (w_beta + sqrt(w_nf)) / w_alpha)) *
+                         (w_zf - utils::sgn(w_zf) * w_l1);
+                }
+                mu.mtx.unlock();
+            }
+        }
+    }
+    //////////
+//    pModel->debugPrintModel();
+    //////////
+}
+
+void ftrl_trainer::train(double sample_count, int y, const vector <pair<string, double>> &x) {
+//    cout << "ftrl_trainer::train(double sample_count, int y, const vector <pair<string, double>> &x)" << endl;
+//    for(auto v : x)
+//    {
+//        cout << v.first << ":" << v.second << endl;
+//    }
+    ftrl_model_unit *thetaBias = pModel->getOrInitModelUnitBias();
+    vector < ftrl_model_unit * > theta(x.size(), NULL);
+    int xLen = x.size();
+    for (int i = 0; i < xLen; ++i) {
+        const string &index = x[i].first;
+        theta[i] = pModel->getOrInitModelUnit(index);
+    }
+    vector<double> uTx(pModel->piece_num);
+    vector<double> wTx(pModel->piece_num);
+    double max_uTx = numeric_limits<double>::lowest();
+    for (int f = 0; f < pModel->piece_num; ++f) {
+        uTx[f] = pModel->get_uTx(x, *thetaBias, theta, f);
+        wTx[f] = pModel->get_wTx(x, *thetaBias, theta, f);
+        if (uTx[f] > max_uTx) max_uTx = uTx[f];
+    }
+    double denominator1 = 0.0;
+    double denominator2 = 0.0;
+    for (int f = 0; f < pModel->piece_num; ++f) {
+        uTx[f] -= max_uTx;
+        uTx[f] = exp(uTx[f]);
+        wTx[f] = utils::sigmoid(y * wTx[f]);
+        denominator1 += uTx[f];
+        denominator2 += uTx[f] * wTx[f];
+    }
+    //update u_n, u_z
+    for (int i = 0; i <= xLen; ++i) {
+        ftrl_model_unit &mu = i < xLen ? *(theta[i]) : *thetaBias;
+        double xi = i < xLen ? x[i].second : 1.0;
+        if (i < xLen || u_bias) {
+            for (int f = 0; f < pModel->piece_num; ++f) {
+                mu.mtx.lock();
+                double &uif = mu.u[f];
+                double &u_nif = mu.u_n[f];
+                double &u_zif = mu.u_z[f];
+                double u_gif = xi * uTx[f] * (1.0 / denominator1 - wTx[f] / denominator2);
+                double u_sif = 1 / u_alpha * (sqrt(u_nif + u_gif * u_gif) - sqrt(u_nif));
+                u_zif += u_gif - u_sif * uif;
+                u_nif += u_gif * u_gif;
+                mu.mtx.unlock();
+            }
+        }
+    }
+    utils uTils;
+    double sample_weight = 1 / (1 + uTils.log_x_y(0.075* sample_count, 10));
+    //update w_n, w_z
+    for (int i = 0; i <= xLen; ++i) {
+        ftrl_model_unit &mu = i < xLen ? *(theta[i]) : *thetaBias;
+        double xi = i < xLen ? x[i].second : 1.0;
+        if (i < xLen || w_bias) {
+            for (int f = 0; f < pModel->piece_num; ++f) {
+                mu.mtx.lock();
+                double &wif = mu.w[f];
+                double &w_nif = mu.w_n[f];
+                double &w_zif = mu.w_z[f];
+                double w_gif = sample_weight * -y * xi * uTx[f] * wTx[f] * (1.0 - wTx[f]) / denominator2;
                 double w_sif = 1 / w_alpha * (sqrt(w_nif + w_gif * w_gif) - sqrt(w_nif));
                 w_zif += w_gif - w_sif * wif;
                 w_nif += w_gif * w_gif;

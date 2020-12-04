@@ -8,7 +8,7 @@ using namespace std;
 
 struct Option 
 {
-    Option() : piece_num(4), threads_num(1), is_debug(false) {}
+    Option() : piece_num(4), threads_num(1), is_debug(false), have_news(false) {}
     string model_path, predict_path;
     int threads_num, piece_num;
     bool is_debug;

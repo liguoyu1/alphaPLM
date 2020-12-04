@@ -19,7 +19,7 @@ class pc_frame
 {
 public:
     pc_frame(){}
-    bool init(pc_task& task, int t_num, int buf_size = 5000, int log_num = 200000);
+    bool init(pc_task& task, int t_num, int buf_size = 500, int log_num = 200000);
     void run();
 
 private:
@@ -31,6 +31,7 @@ private:
     vector<thread> threadVec;
     int bufSize;
     int logNum;
+    int costNum;
     void proThread();
     void conThread();
 };

@@ -1,4 +1,5 @@
 #include "pc_frame.h"
+//#include <time>
 
 bool pc_frame::init(pc_task& task, int t_num, int buf_size, int log_num)
 {
@@ -8,6 +9,8 @@ bool pc_frame::init(pc_task& task, int t_num, int buf_size, int log_num)
     logNum = log_num;
     sem_init(&semPro, 0, 1);
     sem_init(&semCon, 0, 0);
+    costNum = 0;
+//    buffer = new queue<string>(buf_size*(t_num+1));
     threadVec.clear();
     threadVec.push_back(thread(&pc_frame::proThread, this));
     for(int i = 0; i < threadNum; ++i)
@@ -52,6 +55,9 @@ void pc_frame::proThread()
         }
         bufMtx.unlock();
         sem_post(&semCon);
+        while(line_num - costNum > 10000*threadNum){
+            cout << "input buffer filled!" <<endl;
+        }
         if(finished_flag)
         {
             break;
@@ -82,6 +88,7 @@ void pc_frame::conThread(){
         bufMtx.unlock();
         sem_post(&semPro);
         pTask->run_task(input_vec);
+        costNum += bufSize;
         if(finished_flag)
             break;
     }

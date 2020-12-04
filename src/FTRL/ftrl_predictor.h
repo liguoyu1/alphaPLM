@@ -38,8 +38,8 @@ void ftrl_predictor::run_task(vector<string>& dataBuffer)
     vector<string> outputVec(dataBuffer.size());
     for(int i = 0; i < dataBuffer.size(); ++i)
     {
-        plm_sample sample(dataBuffer[i], false, have_news);
-        cout<<"feature size:"<<sample.x.size()<<endl;
+        plm_sample sample(dataBuffer[i], false);
+//        cout<<"feature size:"<<sample.x.size()<<endl;
         double score = pModel->getScore(sample.x, *(pModel->muBias), pModel->muMap);
         if(have_news)
             outputVec[i] = sample.imei+"#"+to_string(score);

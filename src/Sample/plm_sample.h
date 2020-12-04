@@ -19,10 +19,12 @@ public:
     int y;
     vector<pair<string, double> > x;
     string imei;
+    double sample_count;
     plm_sample(const string& all_line, bool is_debug);
 
     plm_sample(const string & data_path);
     plm_sample(const string & data_path, bool is_debug, bool have_news);
+
 };
 
 vector<string> split(const string& str, const string& delim) {  
@@ -43,28 +45,27 @@ vector<string> split(const string& str, const string& delim) {
 	}  
  
 	return res;  
-} 
-// --------------------- 
-// 作者：glmushroom 
-// 来源：CSDN 
-// 原文：https://blog.csdn.net/glmushroom/article/details/80690881 
-// 版权声明：本文为博主原创文章，转载请附上博文链接！
+}
 
 
-plm_sample::plm_sample(const string& all_line, bool is_debug)
+plm_sample::plm_sample(const string& all_line, bool is_debug=false)
 {
+//    cout << "line:" << all_line << endl;
     this->x.clear();
     this->imei.clear();
-    vector<string> terms = split(all_line, spliter);
+    this->sample_count = 1.0;
+    vector<string> terms = split(all_line, tab_spliter);
 
-    if(terms.size()<2) return ;
-    string line = all_line; //terms[0]+" "+terms[terms.size()-1];
+    if(terms.size()<1) return ;
+    if(terms.size()>=2) this->sample_count = stod(terms[1]);
+    string line = terms[0]; //terms[0]+" "+terms[terms.size()-1];
+
+//    cout << "sample_count:" << this->sample_count << endl;
 
     size_t posb = line.find_first_not_of(spliter, 0);
     size_t pose = line.find_first_of(spliter, posb);
     int label = atoi(line.substr(posb, pose-posb).c_str());
     this->y = label > 0 ? 1 : -1;
-//    cout<<"label:"<<this->y<<endl;
     string key;
     double value;
     while(pose < line.size())
@@ -89,19 +90,20 @@ plm_sample::plm_sample(const string& all_line, bool is_debug)
         }
         pose = line.find_first_of(spliter, posb);
         value = stod(line.substr(posb, pose-posb));
+//        cout << key << ":" <<value <<endl;
+//        this.x.insert(make_pair(key, value));
         if(value != 0)
         {
-            cout<<key<<":"<<value<<endl;
+//            cout<<key<<":"<<value<<endl;
             this->x.push_back(make_pair(key, value));
         }
     }
-    if(is_debug){
-        cout<<"sample label :"<<this->y;
-        for(auto i : this->x)
-        {
-            cout << "hello" << endl;
-        }
-    }
+//    cout<<"sample label :"<< this->y;
+//    for(auto i : this->x)
+//    {
+//        cout << i.first << ":" << i.second << " ";
+//    }
+//    cout << endl;
 }
 
 plm_sample::plm_sample(const string& all_line, bool is_debug, bool have_news)
@@ -113,13 +115,11 @@ plm_sample::plm_sample(const string& all_line, bool is_debug, bool have_news)
     string line = terms[terms.size()-1];
     if(have_news)
         this->imei = terms[0];
-//    cout<<"line:"<<line<<endl;
 
     size_t posb = line.find_first_not_of(spliter, 0);
     size_t pose = line.find_first_of(spliter, posb);
     int label = atoi(line.substr(posb, pose-posb).c_str());
     this->y = label > 0 ? 1 : -1;
-//    cout<<"label:"<<this->y<<endl;
     string key;
     double value;
     while(pose < line.size())
@@ -146,7 +146,7 @@ plm_sample::plm_sample(const string& all_line, bool is_debug, bool have_news)
         value = stod(line.substr(posb, pose-posb));
         if(value != 0)
         {
-            cout<<key<<":"<<value<<endl;
+//            cout<<key<<":"<<value<<endl;
             this->x.push_back(make_pair(key, value));
         }
     }

@@ -60,10 +60,11 @@ int main(int argc, char* argv[])
         cout << train_help() << endl;
         return EXIT_FAILURE;
     }
+    cout<< "run ..." << endl;
 
     ftrl_trainer trainer(opt);
 
-    if(opt.b_init) 
+    if(opt.b_init)
     {
         ifstream f_temp(opt.init_m_path.c_str());
         if(!trainer.loadModel(f_temp)) 
@@ -74,14 +75,14 @@ int main(int argc, char* argv[])
         f_temp.close();
     }
 
-    trainer.debugModel();
+//    cout << "error ... ..." <<endl;
     pc_frame frame;
     frame.init(trainer, opt.threads_num);
     frame.run();
 
     ofstream f_model(opt.model_path.c_str(), ofstream::out);
     trainer.outputModel(f_model);
-    trainer.debugModel();
+//    trainer.debugModel();
     f_model.close();
 
     return 0;

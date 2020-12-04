@@ -15,6 +15,7 @@ public:
     double static gaussian();
     double static gaussian(double mean, double stdev);
     double static sigmoid(double x);
+    double static log_x_y(double x, double y);
 };
 
 
